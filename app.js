@@ -1,12 +1,21 @@
-var express = require('express'),
-    app = express();
+const express = require('express');
+const path = require('path');
+const dotenv = require('dotenv');
 
-app.use(express.static(__dirname + '/public/'));
+dotenv.config(); // Load environment variables from .env file
 
-var port = process.env.PORT || 8080;
+const app = express();
+const PORT = process.env.PORT || 8080;
 
-app.set('port', port);
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.listen(app.get('port'), function(){
-    console.log('html5 video player library app started on port ' + app.get('port'));
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something went wrong!');
+});
+
+app.listen(PORT, () => {
+  console.log(`HTML5 video player library app started on port ${PORT}`);
 });
